@@ -148,7 +148,7 @@ export default function McdWorkspace() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full bg-neutral-950">
+    <div className="flex h-[calc(100vh-64px)] w-full bg-sky-100">
       <div className="flex-1 relative h-full w-full">
         <ReactFlow
           nodes={nodes.map(n => ({...n, data: {...n.data, onChange: (d: any) => updateNodeData(n.id, d)}}))}
@@ -159,11 +159,11 @@ export default function McdWorkspace() {
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           fitView
-          className="bg-neutral-950"
+          className="bg-sky-50"
         >
-          <Background color="#444" gap={16} />
-          <Controls className="bg-neutral-800 border-neutral-700 fill-white" />
-          <Panel position="top-left" className="bg-neutral-900/80 p-2 rounded-xl backdrop-blur-md border border-neutral-800 flex gap-2 shadow-xl">
+          <Background color="#7dd3fc" gap={16} />
+          <Controls className="bg-white border-sky-200 fill-sky-800" />
+          <Panel position="top-left" className="bg-white/80 p-2 rounded-xl backdrop-blur-md border border-sky-200 flex gap-2 shadow-xl">
             <button onClick={addEntity} className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 transition rounded-lg text-sm font-medium">
               <Plus size={16} /> Entité
             </button>
@@ -185,7 +185,7 @@ export default function McdWorkspace() {
       </div>
       
       {results && (
-        <div className="w-1/3 min-w-[450px] border-l border-neutral-800 bg-neutral-900 flex flex-col z-10 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+        <div className="w-1/3 min-w-[450px] border-l border-sky-200 bg-white flex flex-col z-10 shadow-[-10px_0_30px_rgba(14,165,233,0.1)]">
             <ResultsPanel results={results} onClose={() => setResults(null)} />
         </div>
       )}
