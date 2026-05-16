@@ -1,9 +1,9 @@
 "use client";
 
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, NodeResizer } from '@xyflow/react';
 import { Plus, X } from 'lucide-react';
 
-export default function AssociationNode({ data, id }: any) {
+export default function AssociationNode({ data, id, selected }: any) {
   const addProperty = () => {
     data.onChange({
       properties: [...(data.properties || []), { id: `prop_${Date.now()}`, name: 'attr', type: 'string', isIdentifier: false }]
@@ -23,33 +23,53 @@ export default function AssociationNode({ data, id }: any) {
 
   return (
     <div className="relative group">
+      <NodeResizer color="#f59e0b" isVisible={selected} minWidth={140} minHeight={80} />
       <Handle type="target" position={Position.Top} className="opacity-0 group-hover:opacity-100" />
-      <div className="w-32 h-16 bg-white border-[3px] border-amber-400 rounded-[100%] shadow-[0_0_20px_rgba(251,191,36,0.4)] flex flex-col items-center justify-center p-2">
-        <input 
-          className="bg-transparent text-slate-800 font-medium outline-none w-full text-center text-xs italic"
-          value={data.name}
-          onChange={(e) => data.onChange({ name: e.target.value })}
-          placeholder="Association"
-        />
+      
+      <div className="w-full h-full bg-white border-[3px] border-amber-400 rounded-[50%_50%] shadow-[0_0_20px_rgba(251,191,36,0.4)] flex flex-col items-center justify-center p-4 overflow-hidden">
+        <div className="w-full flex justify-center pb-1">
+          <input 
+            className="bg-transparent text-slate-800 font-bold outline-none w-full text-center text-[11px] italic"
+            value={data.name}
+            onChange={(e) => data.onChange({ name: e.target.value })}
+            placeholder="Association"
+          />
+        </div>
         
-        {/* Properties popover or simplified list */}
-        <div className="absolute top-full mt-2 bg-slate-800 rounded-lg p-2 border border-slate-700 hidden group-hover:block z-50 shadow-2xl min-w-[150px]">
-          <div className="text-[10px] text-slate-500 font-bold mb-2 px-1 uppercase tracking-tighter">Propriétés</div>
+        {/* Separator line */}
+        <div className="w-2/3 border-t border-amber-200 my-1" />
+
+        <div className="flex flex-col items-center gap-1 w-full max-h-[80%] overflow-y-auto custom-scrollbar px-2">
           {data.properties?.map((prop: any, i: number) => (
-             <div key={prop.id} className="flex items-center gap-1 mb-1">
+             <div key={prop.id} className="flex items-center justify-center gap-1 group/prop text-[9px] font-mono w-full">
                 <input 
                   value={prop.name}
                   onChange={(e) => updateProp(i, 'name', e.target.value)}
-                  className="bg-slate-900 text-[10px] p-1 rounded outline-none w-full text-slate-300"
+                  className="bg-transparent outline-none text-slate-700 w-1/2 text-right"
+                  placeholder="nom"
                 />
-                <button onClick={() => removeProp(i)} className="text-slate-600 hover:text-red-500">
+                <span className="text-slate-400">:</span>
+                <select
+                  value={prop.type || 'string'}
+                  onChange={(e) => updateProp(i, 'type', e.target.value)}
+                  className="bg-transparent text-slate-500 outline-none cursor-pointer w-1/2 text-left"
+                >
+                  <option value="int">int</option>
+                  <option value="string">string</option>
+                  <option value="date">date</option>
+                  <option value="boolean">bool</option>
+                </select>
+                <button onClick={() => removeProp(i)} className="text-slate-300 hover:text-red-500 opacity-0 group-hover/prop:opacity-100 absolute right-1">
                   <X size={10} />
                 </button>
              </div>
           ))}
-          <button onClick={addProperty} className="text-[10px] text-sky-400 font-bold px-1">+ Ajouter</button>
+          <button onClick={addProperty} className="text-[9px] text-amber-600 font-bold hover:underline mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            + Ajouter
+          </button>
         </div>
       </div>
+
       <Handle type="source" position={Position.Bottom} className="opacity-0 group-hover:opacity-100" />
       <Handle type="target" position={Position.Left} id="left" className="opacity-0 group-hover:opacity-100" />
       <Handle type="source" position={Position.Right} id="right" className="opacity-0 group-hover:opacity-100" />

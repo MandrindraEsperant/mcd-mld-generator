@@ -178,10 +178,6 @@ export default function McdWorkspace() {
                 <Layers size={18} className="text-amber-500" />
                 <span>Association</span>
               </button>
-              <button className="sidebar-button text-slate-600 cursor-not-allowed" disabled>
-                <Share2 size={18} />
-                <span>Généralisation (À venir)</span>
-              </button>
             </div>
           </div>
         </div>
@@ -192,7 +188,7 @@ export default function McdWorkspace() {
           className="mt-auto w-full flex items-center justify-center gap-3 py-4 px-6 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg shadow-sky-500/20 disabled:opacity-50"
         >
           {isGenerating ? <div className="w-5 h-5 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" /> : <Cpu size={20} />}
-          Générer tout
+          Générer MLD & SQL
         </button>
       </aside>
 

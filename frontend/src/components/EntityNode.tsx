@@ -77,10 +77,6 @@ export default function EntityNode({ data, id, selected }: any) {
           </button>
         </div>
 
-        <div className="px-4 py-2 border-t border-slate-100">
-           <span className="text-[10px] text-slate-400 italic underline cursor-pointer hover:text-sky-600 transition-colors">Méthodes...</span>
-        </div>
-
         <Handle type="source" position={Position.Bottom} className="opacity-0 group-hover:opacity-100" />
         <Handle type="source" position={Position.Right} id="right" className="opacity-0 group-hover:opacity-100" />
       </div>
