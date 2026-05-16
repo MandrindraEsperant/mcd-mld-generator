@@ -44,9 +44,9 @@ export default function ResultsPanel({ results, onClose }: { results: any, onClo
           <div className="space-y-6">
             {results.mld?.tables?.map((table: any, i: number) => (
               <div key={i} className="bg-white border border-sky-200 rounded-xl overflow-hidden shadow-lg">
-                <div className="bg-blue-50 border-b border-sky-100 px-4 py-2 flex items-center gap-2">
-                  <Database size={16} className="text-blue-600" />
-                  <span className="font-bold text-blue-900">{table.name}</span>
+                <div className="bg-blue-600 border-b border-sky-100 px-4 py-2 flex items-center gap-2">
+                  <Database size={16} className="text-white" />
+                  <span className="font-bold text-white">{table.name}</span>
                 </div>
                 <div className="p-0">
                   <table className="w-full text-sm text-left">

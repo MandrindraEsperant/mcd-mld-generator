@@ -29,7 +29,7 @@ export default function AssociationNode({ data, id, selected }: any) {
         <Handle type="target" position={Position.Top} className="w-3 h-3 bg-purple-500" />
         <div className="bg-gradient-to-r from-purple-600/20 to-purple-800/20 p-2 flex justify-center items-center rounded-t-[36px] shrink-0">
           <input 
-            className="bg-transparent text-white font-bold outline-none w-full text-center placeholder-neutral-500"
+            className="bg-purple-500 text-white font-bold outline-none w-full text-center placeholder-white/60"
             value={data.name}
             onChange={(e) => data.onChange({ name: e.target.value })}
             placeholder="Association"
@@ -42,10 +42,22 @@ export default function AssociationNode({ data, id, selected }: any) {
                 <input 
                   value={prop.name}
                   onChange={(e) => updateProp(i, 'name', e.target.value)}
-                  placeholder="nom_attribut"
-                  className={`bg-neutral-800 px-2 py-1 rounded-full w-full outline-none focus:ring-1 focus:ring-purple-500 transition text-center text-neutral-200 placeholder-neutral-500`}
+                  placeholder="nom"
+                  className={`bg-neutral-800 px-2 py-1.5 rounded-l-full w-full outline-none focus:ring-1 focus:ring-purple-500 transition text-center text-xs text-white placeholder-neutral-500 min-w-[60px]`}
                 />
-                <button onClick={() => removeProp(i)} className="text-neutral-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition absolute right-2 bg-neutral-900 rounded-full">
+                <select
+                  value={prop.type || 'VARCHAR(255)'}
+                  onChange={(e) => updateProp(i, 'type', e.target.value)}
+                  className="bg-neutral-800 text-[10px] px-1 py-1.5 rounded-r-full border-l border-neutral-700 text-neutral-300 outline-none focus:ring-1 focus:ring-purple-500 shrink-0"
+                >
+                  <option value="INT">INT</option>
+                  <option value="VARCHAR(255)">VARCHAR</option>
+                  <option value="TEXT">TEXT</option>
+                  <option value="DATE">DATE</option>
+                  <option value="BOOLEAN">BOOLEAN</option>
+                  <option value="FLOAT">FLOAT</option>
+                </select>
+                <button onClick={() => removeProp(i)} className="text-neutral-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition absolute right-2 bg-neutral-900 rounded-full shrink-0">
                   <X size={14} />
                 </button>
               </div>

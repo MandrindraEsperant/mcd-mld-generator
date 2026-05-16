@@ -38,7 +38,7 @@ export default function CustomEdge({
           title="Modifier la cardinalité"
         >
           <select 
-            className="bg-transparent outline-none cursor-pointer text-center appearance-none"
+            className="bg-red-400 outline-none cursor-pointer text-center appearance-none"
             value={`${data?.cardMin || '1'},${data?.cardMax || 'n'}`}
             onChange={(e) => {
                 const [min, max] = e.target.value.split(',');

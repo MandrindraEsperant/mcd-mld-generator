@@ -29,7 +29,7 @@ export default function EntityNode({ data, id, selected }: any) {
         <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500" />
         <div className="bg-gradient-to-r from-blue-600/20 to-blue-800/20 border-b border-blue-500/30 p-3 flex justify-between items-center shrink-0">
           <input 
-            className="bg-transparent text-white font-bold outline-none w-full placeholder-neutral-500"
+            className="bg-blue-400 text-white font-bold outline-none w-full placeholder-white/60"
             value={data.name}
             onChange={(e) => data.onChange({ name: e.target.value })}
             placeholder="Nom Entité"
@@ -51,9 +51,21 @@ export default function EntityNode({ data, id, selected }: any) {
                 <input 
                   value={prop.name}
                   onChange={(e) => updateProp(i, 'name', e.target.value)}
-                  placeholder="nom_attribut"
-                  className={`bg-neutral-800 px-2 py-1 rounded w-full min-w-0 outline-none focus:ring-1 focus:ring-blue-500 transition placeholder-neutral-500 ${prop.isIdentifier ? 'text-blue-300 underline decoration-blue-500/50 font-semibold' : 'text-neutral-200'}`}
+                  placeholder="nom"
+                  className={`bg-neutral-800 px-2 py-1.5 rounded w-full min-w-0 outline-none focus:ring-1 focus:ring-blue-500 transition placeholder-neutral-500 text-xs ${prop.isIdentifier ? 'text-blue-300 underline decoration-blue-500/50 font-semibold' : 'text-white'}`}
                 />
+                <select
+                  value={prop.type || 'VARCHAR(255)'}
+                  onChange={(e) => updateProp(i, 'type', e.target.value)}
+                  className="bg-neutral-800 text-[10px] px-1 py-1.5 rounded text-neutral-300 outline-none focus:ring-1 focus:ring-blue-500 shrink-0"
+                >
+                  <option value="INT">INT</option>
+                  <option value="VARCHAR(255)">VARCHAR</option>
+                  <option value="TEXT">TEXT</option>
+                  <option value="DATE">DATE</option>
+                  <option value="BOOLEAN">BOOLEAN</option>
+                  <option value="FLOAT">FLOAT</option>
+                </select>
                 <button onClick={() => removeProp(i)} className="text-neutral-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition shrink-0">
                   <X size={14} />
                 </button>
