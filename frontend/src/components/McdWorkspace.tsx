@@ -16,7 +16,7 @@ import {
   Panel
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Play, Plus } from 'lucide-react';
+import { Play, Plus, Cpu, Box, Share2, Layers, ChevronRight } from 'lucide-react';
 import EntityNode from './EntityNode';
 import AssociationNode from './AssociationNode';
 import CustomEdge from './CustomEdge';
@@ -41,10 +41,12 @@ export default function McdWorkspace() {
     (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [],
   );
+
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     [],
   );
+
   const updateEdgeData = useCallback((edgeId: string, newData: any) => {
     setEdges((eds) =>
       eds.map((edge) => {
@@ -61,7 +63,7 @@ export default function McdWorkspace() {
         ...params, 
         type: 'custom',
         animated: true, 
-        style: { stroke: '#8b5cf6', strokeWidth: 2 },
+        style: { stroke: '#64748b', strokeWidth: 2 },
         data: { cardMin: '1', cardMax: 'n', onChange: updateEdgeData }
     }, eds)),
     [updateEdgeData],
@@ -71,8 +73,8 @@ export default function McdWorkspace() {
     const newNode: Node = {
       id: `entity_${Date.now()}`,
       type: 'entity',
-      position: { x: 100, y: 100 },
-      data: { name: 'Nouvelle Entite', properties: [] }
+      position: { x: 250, y: 150 },
+      data: { name: 'NOUVELLE_ENTITE', properties: [] }
     };
     setNodes((nds) => [...nds, newNode]);
   };
@@ -81,8 +83,8 @@ export default function McdWorkspace() {
     const newNode: Node = {
       id: `assoc_${Date.now()}`,
       type: 'association',
-      position: { x: 400, y: 100 },
-      data: { name: 'Nouvelle Association', properties: [] }
+      position: { x: 500, y: 150 },
+      data: { name: 'Avoir', properties: [] }
     };
     setNodes((nds) => [...nds, newNode]);
   };
@@ -141,15 +143,61 @@ export default function McdWorkspace() {
       setResults(data);
     } catch (error) {
       console.error(error);
-      alert('Erreur lors de la génération. Assurez-vous que le backend est démarré sur le port 8080.');
+      alert('Erreur lors de la génération. Assurez-vous que le serveur est actif.');
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full bg-sky-100">
-      <div className="flex-1 relative h-full w-full">
+    <div className="flex h-screen w-screen bg-slate-950 text-slate-200">
+      {/* Sidebar Gauche */}
+      <aside className="w-72 bg-slate-900 border-r border-slate-800 flex flex-col p-6 z-20">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="bg-sky-500/20 p-2 rounded-lg text-sky-400">
+            <Cpu size={24} />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white tracking-tight">Studio IDM</h1>
+          </div>
+        </div>
+        
+        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mb-8">
+          Ingénierie dirigée par les modèles
+        </p>
+
+        <div className="space-y-6 flex-1">
+          <div>
+            <h2 className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-4">Boîte à outils</h2>
+            <div className="space-y-2">
+              <button onClick={addEntity} className="sidebar-button sidebar-button-inactive">
+                <Box size={18} className="text-sky-500" />
+                <span>Entité</span>
+              </button>
+              <button onClick={addAssociation} className="sidebar-button sidebar-button-inactive">
+                <Layers size={18} className="text-amber-500" />
+                <span>Association</span>
+              </button>
+              <button className="sidebar-button text-slate-600 cursor-not-allowed" disabled>
+                <Share2 size={18} />
+                <span>Généralisation (À venir)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button 
+          onClick={generateMld}
+          disabled={isGenerating}
+          className="mt-auto w-full flex items-center justify-center gap-3 py-4 px-6 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg shadow-sky-500/20 disabled:opacity-50"
+        >
+          {isGenerating ? <div className="w-5 h-5 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" /> : <Cpu size={20} />}
+          Générer tout
+        </button>
+      </aside>
+
+      {/* Zone d'édition */}
+      <div className="flex-1 relative h-full">
         <ReactFlow
           nodes={nodes.map(n => ({...n, data: {...n.data, onChange: (d: any) => updateNodeData(n.id, d)}}))}
           edges={edges.map(e => ({...e, data: {...e.data, onChange: updateEdgeData}}))}
@@ -159,36 +207,19 @@ export default function McdWorkspace() {
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           fitView
-          className="bg-sky-50"
+          className="bg-[#0f172a]"
         >
-          <Background color="#7dd3fc" gap={16} />
-          <Controls className="bg-white border-sky-200 fill-sky-800" />
-          <Panel position="top-left" className="bg-white/80 p-2 rounded-xl backdrop-blur-md border border-sky-200 flex gap-2 shadow-xl">
-            <button onClick={addEntity} className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 transition rounded-lg text-sm font-medium">
-              <Plus size={16} /> Entité
-            </button>
-            <button onClick={addAssociation} className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-500 transition rounded-lg text-sm font-medium">
-              <Plus size={16} /> Association
-            </button>
-          </Panel>
-          <Panel position="top-right" className="p-2">
-            <button 
-                onClick={generateMld}
-                disabled={isGenerating}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 transition rounded-xl font-bold shadow-lg shadow-emerald-900/50 disabled:opacity-50"
-            >
-              {isGenerating ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Play size={20} fill="currentColor" />}
-              Générer MLD & SQL
-            </button>
-          </Panel>
+          <Background color="#1e293b" gap={20} variant="dots" />
+          <Controls className="bg-slate-800 border-slate-700 fill-slate-400 rounded-lg shadow-2xl" />
         </ReactFlow>
-      </div>
-      
-      {results && (
-        <div className="w-1/3 min-w-[450px] border-l border-sky-200 bg-white flex flex-col z-10 shadow-[-10px_0_30px_rgba(14,165,233,0.1)]">
+
+        {/* Panneau de résultats flottant */}
+        {results && (
+          <div className="absolute top-6 right-6 bottom-6 w-[500px] z-50">
             <ResultsPanel results={results} onClose={() => setResults(null)} />
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
