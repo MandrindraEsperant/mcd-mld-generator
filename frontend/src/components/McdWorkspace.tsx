@@ -16,14 +16,19 @@ import {
   Panel
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Play, Database, FileCode2, Plus } from 'lucide-react';
+import { Play, Plus } from 'lucide-react';
 import EntityNode from './EntityNode';
 import AssociationNode from './AssociationNode';
+import CustomEdge from './CustomEdge';
 import ResultsPanel from './ResultsPanel';
 
 const nodeTypes = {
   entity: EntityNode,
   association: AssociationNode,
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
 };
 
 export default function McdWorkspace() {
@@ -40,9 +45,26 @@ export default function McdWorkspace() {
     (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     [],
   );
+  const updateEdgeData = useCallback((edgeId: string, newData: any) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return { ...edge, data: { ...edge.data, ...newData } };
+        }
+        return edge;
+      })
+    );
+  }, []);
+
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#8b5cf6', strokeWidth: 2 } }, eds)),
-    [],
+    (params: Connection) => setEdges((eds) => addEdge({ 
+        ...params, 
+        type: 'custom',
+        animated: true, 
+        style: { stroke: '#8b5cf6', strokeWidth: 2 },
+        data: { cardMin: '1', cardMax: 'n', onChange: updateEdgeData }
+    }, eds)),
+    [updateEdgeData],
   );
 
   const addEntity = () => {
@@ -101,8 +123,8 @@ export default function McdWorkspace() {
                 id: e.id,
                 entityId,
                 associationId,
-                cardMin: "1",
-                cardMax: "n", // Defaulting for visual simplicity. In full app, user selects this on the edge
+                cardMin: e.data?.cardMin || "1",
+                cardMax: e.data?.cardMax || "n",
                 relative: false
             };
         }).filter(l => l.entityId && l.associationId)
@@ -126,15 +148,16 @@ export default function McdWorkspace() {
   };
 
   return (
-    <div className="flex h-full w-full bg-neutral-950">
-      <div className="flex-1 relative">
+    <div className="flex h-[calc(100vh-64px)] w-full bg-neutral-950">
+      <div className="flex-1 relative h-full w-full">
         <ReactFlow
           nodes={nodes.map(n => ({...n, data: {...n.data, onChange: (d: any) => updateNodeData(n.id, d)}}))}
-          edges={edges}
+          edges={edges.map(e => ({...e, data: {...e.data, onChange: updateEdgeData}}))}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           fitView
           className="bg-neutral-950"
         >
